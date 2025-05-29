@@ -1,0 +1,16 @@
+{
+  "diary": "Diary",
+  "chat": "Chat",
+  "settings": "Settings",
+  "theme": {
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "title": "Theme"
+  },
+  "languages": {
+    "title": "Language",
+    "en": "English",
+    "uk": "Українська"
+  }
+}

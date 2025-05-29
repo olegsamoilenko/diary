@@ -1,0 +1,31 @@
+import DropDownPicker from "react-native-dropdown-picker";
+import React, { Dispatch, SetStateAction } from "react";
+
+type DropdownProps = {
+  value: string | null;
+  items: { label: string; value: string }[];
+  setValue: Dispatch<SetStateAction<string | null>>;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  [key: string]: any;
+};
+export default function Dropdown({
+  value,
+  items,
+  setValue,
+  open,
+  setOpen,
+  ...props
+}: DropdownProps) {
+  return (
+    <DropDownPicker
+      open={open}
+      setOpen={setOpen}
+      value={value}
+      items={items}
+      setValue={setValue}
+      multiple={false}
+      {...props}
+    />
+  );
+}

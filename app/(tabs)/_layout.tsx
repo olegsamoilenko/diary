@@ -6,11 +6,13 @@ import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useTranslation } from "react-i18next";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -31,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="diary"
         options={{
-          title: "Diary",
+          title: t("diary"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="notebook-outline"
@@ -44,7 +46,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: "Chat",
+          title: t("chat"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="robot-outline"
@@ -57,7 +59,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: t("settings"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="cog-outline"

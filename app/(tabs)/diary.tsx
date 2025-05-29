@@ -5,15 +5,52 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 
 import { Calendar } from "react-native-calendars";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function Diary() {
+  const colorScheme = useColorScheme();
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Colors[colorScheme].statusBarBg,
+      }}
+      edges={["top"]}
+    >
       <Calendar />
-      <ThemedView style={{ flex: 1, padding: 16 }}>
-        <ThemedText>Записи за вибраний день</ThemedText>
-        {}
-      </ThemedView>
+      <ParallaxScrollView>
+        <ThemedView style={{ flex: 1 }}>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          <ThemedText>Записи за вибраний день</ThemedText>
+          {}
+        </ThemedView>
+      </ParallaxScrollView>
     </SafeAreaView>
   );
 }
