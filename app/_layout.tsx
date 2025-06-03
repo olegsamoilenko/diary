@@ -11,6 +11,8 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ThemeProviderCustom } from "@/context/ThemeContext";
+import { AuthProvider } from "@/context/AuthContext";
+// import * as SecureStore from "expo-secure-store";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -23,7 +25,9 @@ export default function RootLayout() {
 
   return (
     <ThemeProviderCustom>
-      <RootLayoutInner />
+      <AuthProvider>
+        <RootLayoutInner />
+      </AuthProvider>
     </ThemeProviderCustom>
   );
 }
@@ -33,12 +37,11 @@ function RootLayoutInner() {
   const navTheme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
   const barStyle = colorScheme === "dark" ? "light" : "dark";
 
+  // SecureStore.deleteItemAsync("token");
+
   return (
     <ThemeProvider value={navTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <Stack screenOptions={{ headerShown: false }}></Stack>
       <StatusBar style={barStyle} translucent />
     </ThemeProvider>
   );

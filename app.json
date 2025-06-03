@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "diary",
-    "slug": "diary",
+    "name": "Nemory",
+    "slug": "nemory",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "diary",
+    "scheme": "nemory",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -34,7 +34,8 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

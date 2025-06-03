@@ -23,32 +23,6 @@ export default function Diary() {
       <ParallaxScrollView>
         <ThemedView style={{ flex: 1 }}>
           <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          <ThemedText>Записи за вибраний день</ThemedText>
-          {}
         </ThemedView>
       </ParallaxScrollView>
     </SafeAreaView>

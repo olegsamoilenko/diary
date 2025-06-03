@@ -8,20 +8,23 @@ const tintColorDark = "#fff";
 
 export const Colors = {
   light: {
-    text: "#11181C",
-    background: "#fff",
+    main: "#344360",
+    text: "#2E3A59",
+    background: "#F7F8FA",
     tint: tintColorLight,
     icon: "#687076",
     tabIconDefault: "#687076",
     tabIconSelected: tintColorLight,
-    statusBarBg: "#fff",
+    statusBarBg: "#F7F8FA",
     radioBackground: "#fff",
     radioBorder: "#aaa",
     radioSelectedBorder: "#0284c7",
     radioSelectedBackground: "#eee",
     radioSelectedDot: "#0284c7",
+    input: "#f2f3f7",
   },
   dark: {
+    main: "#344360",
     text: "#ECEDEE",
     background: "#151718",
     tint: tintColorDark,
@@ -34,5 +37,6 @@ export const Colors = {
     radioSelectedBorder: "#fff",
     radioSelectedBackground: "#151718",
     radioSelectedDot: "#fff",
+    input: "#151718",
   },
 };
