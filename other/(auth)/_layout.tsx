@@ -6,15 +6,13 @@ export default function AuthLayout() {
   const { isLoggedIn, isReady } = useAuth();
   const router = useRouter();
 
-  console.log("AuthLayout: isLoggedIn:", isLoggedIn);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.replace("/(tabs)/diary");
-    }
-  }, [isLoggedIn]);
-
-  if (!isReady) return null;
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     router.replace("/(tabs)/diary");
+  //   }
+  // }, [isLoggedIn]);
+  //
+  // if (!isReady) return null;
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }

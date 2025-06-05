@@ -19,6 +19,8 @@ const LanguageSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
     }),
   );
 
+  console.log("Available languages:", languages);
+
   const setValue = useCallback(
     (valOrFn: string | ((prev: string | null) => string | null)) => {
       const value = typeof valOrFn === "function" ? valOrFn(lang) : valOrFn;

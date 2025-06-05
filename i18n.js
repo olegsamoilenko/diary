@@ -9,8 +9,6 @@ const SUPPORTED_LANGUAGES = ["en", "uk"];
 const locales = Localization.getLocales();
 let deviceLanguage = locales.length ? locales[0].languageCode : "en";
 
-console.log("locales", locales);
-
 if (!SUPPORTED_LANGUAGES.includes(deviceLanguage)) {
   deviceLanguage = "en";
 }

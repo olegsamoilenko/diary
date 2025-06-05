@@ -1,5 +1,5 @@
-import { Tabs, useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import { Tabs } from "expo-router";
+import React from "react";
 import { Platform } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
@@ -9,23 +9,10 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useTranslation } from "react-i18next";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAuth } from "@/context/AuthContext";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
-  const { isLoggedIn, isReady } = useAuth();
-  const router = useRouter();
-
-  console.log("TabLayout: isLoggedIn:", isLoggedIn);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.replace("/(auth)/login"); // якщо НЕ залогінений — в логін
-    }
-  }, [isLoggedIn]);
-
-  if (!isReady) return null;
 
   return (
     <Tabs

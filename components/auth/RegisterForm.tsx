@@ -35,7 +35,6 @@ export default function RegisterForm(props: RegisterFormProps) {
 
     setLoading(true);
     try {
-      console.log(`${apiUrl}/auth/registration`);
       await axios.post(`${apiUrl}/auth/registration`, {
         name,
         email,

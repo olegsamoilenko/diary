@@ -6,6 +6,7 @@ export default {
     slug: "nemory",
     scheme: "nemory",
     version: "1.0.0",
+    plugins: ["expo-localization"],
     extra: {
       API_URL: process.env.API_URL,
     },

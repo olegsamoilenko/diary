@@ -21,7 +21,6 @@ export default function AuthScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme];
   const styles = getStyles(colors);
-  console.log("colorScheme", colorScheme);
 
   return (
     <KeyboardAvoidingView
