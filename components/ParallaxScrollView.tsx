@@ -7,19 +7,21 @@ import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 
 const HEADER_HEIGHT = 250;
 
-type Props = PropsWithChildren<{ isPadding?: boolean }>;
+type Props = PropsWithChildren<{ isPadding?: boolean; scrollRef?: any }>;
 
 export default function ParallaxScrollView({
   children,
   isPadding = true,
+  scrollRef,
 }: Props) {
-  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const localScrollRef = useAnimatedRef<Animated.ScrollView>();
+  const refToUse = scrollRef || localScrollRef;
   const bottom = useBottomTabOverflow();
 
   return (
     <ThemedView style={styles.container}>
       <Animated.ScrollView
-        ref={scrollRef}
+        ref={refToUse}
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom }}
         contentContainerStyle={{ paddingBottom: bottom }}

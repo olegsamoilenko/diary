@@ -1,13 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import { Pressable, Text } from "react-native";
-import { Calendar } from "react-native-calendars";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import * as Localization from "expo-localization";
-import { FIRST_DAY_BY_LOCALE } from "@/constants/firstDayByLocale";
+import { FIRST_DAY_BY_LOCALE } from "@/constants/FirstDayByLocale";
+import i18n from "i18next";
 
 type MonthViewProps = {
-  selectedDay: string | null;
-  setSelectedDay: (day: string) => void;
+  selectedDay: string | number | Date | undefined;
+  onDayPress: (day: string) => void;
   moodByDate: Record<string, string | undefined>;
   setMonth: (month: number) => void;
   setYear: (year: number) => void;
@@ -15,8 +16,8 @@ type MonthViewProps = {
 };
 export default function MonthView({
   selectedDay,
-  setSelectedDay,
   moodByDate,
+  onDayPress,
   setMonth,
   setYear,
   setShowWeek,
@@ -25,8 +26,10 @@ export default function MonthView({
   const localeArr = Localization.getLocales();
   const locale = localeArr[0]?.languageTag ?? "en-US";
   const firstDayOfWeek = FIRST_DAY_BY_LOCALE[locale] ?? 1;
+  const lang = i18n.language || "uk";
   return (
     <Calendar
+      key={lang}
       firstDay={firstDayOfWeek}
       theme={{
         calendarBackground: Colors[colorScheme].background,
@@ -41,10 +44,7 @@ export default function MonthView({
         const emoji = moodByDate[date.dateString];
         return (
           <Pressable
-            onPress={() => {
-              setSelectedDay(date.dateString);
-              setShowWeek(true);
-            }}
+            onPress={() => onDayPress(date.dateString)}
             style={{
               alignItems: "center",
               backgroundColor:

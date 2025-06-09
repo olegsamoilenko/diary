@@ -6,6 +6,8 @@ import { Colors } from "@/constants/Colors";
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import * as SecureStore from "expo-secure-store";
+import { LocaleConfig } from "react-native-calendars";
 
 const LanguageSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
   const [lang, setLang] = useState<string | null>(i18n.language);
@@ -19,14 +21,14 @@ const LanguageSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
     }),
   );
 
-  console.log("Available languages:", languages);
-
   const setValue = useCallback(
-    (valOrFn: string | ((prev: string | null) => string | null)) => {
+    async (valOrFn: string | ((prev: string | null) => string | null)) => {
       const value = typeof valOrFn === "function" ? valOrFn(lang) : valOrFn;
       if (value) {
         i18n.changeLanguage(value);
         setLang(value);
+        LocaleConfig.defaultLocale = value;
+        await SecureStore.setItemAsync("lang", value);
       }
     },
     [lang],

@@ -4,10 +4,4 @@ import { getMonthYearStr } from "./diary/getMonthYearStr";
 import { getWeekdayLabels } from "./diary/getWeekdayLabels";
 import { getNumbersMonthAndYear } from "./diary/getNumbersMonthAndYear";
 
-export {
-  apiRequest,
-  getWeekdayLabels,
-  addDays,
-  getMonthYearStr,
-  getNumbersMonthAndYear,
-};
+export { apiRequest, getWeekdayLabels, addDays, getMonthYearStr, getNumbersMonthAndYear };

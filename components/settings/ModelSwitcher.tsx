@@ -1,30 +1,32 @@
 import React, { forwardRef } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { useThemeCustom } from "@/context/ThemeContext";
-import { useTranslation } from "react-i18next";
-import { THEME_OPTIONS } from "@/constants/ThemeOptions";
 import SideSheet, { SideSheetRef } from "@/components/SideSheet";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AI_MODELS } from "@/constants/AIModels";
 import { Colors } from "@/constants/Colors";
+import { useTranslation } from "react-i18next";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { setAiModel } from "@/store/slices/settings/settingsSlice";
 
-const ThemeSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
-  const { theme, setTheme } = useThemeCustom();
+const ModelSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const aiModel = useAppSelector((state) => state.settings.aiModel);
   const colorScheme = useColorScheme();
 
   return (
     <SideSheet ref={ref}>
       <View style={styles.container}>
-        {THEME_OPTIONS.map((option) => (
+        {AI_MODELS.map((model) => (
           <TouchableOpacity
-            key={option.value}
+            key={model.value}
             style={styles.row}
-            onPress={() => setTheme(option.value as any)}
+            onPress={() => dispatch(setAiModel(model.key))}
           >
             <View
               style={[
                 styles.radio,
-                theme === option.value && {
+                aiModel === model.key && {
                   borderColor: Colors[colorScheme].radioSelectedBorder,
                   backgroundColor: Colors[colorScheme].radioSelectedBackground,
                 },
@@ -34,7 +36,7 @@ const ThemeSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
                 },
               ]}
             >
-              {theme === option.value && (
+              {aiModel === model.key && (
                 <View
                   style={[
                     styles.radioDot,
@@ -44,7 +46,7 @@ const ThemeSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
               )}
             </View>
             <Text style={[styles.label, { color: Colors[colorScheme].text }]}>
-              {t(`theme.${option.key}`)}
+              {t(`model.${model.key}`)}
             </Text>
           </TouchableOpacity>
         ))}
@@ -53,8 +55,8 @@ const ThemeSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
   );
 });
 
-ThemeSwitcher.displayName = "ThemeSwitcher";
-export default ThemeSwitcher;
+ModelSwitcher.displayName = "ThemeSwitcher";
+export default ModelSwitcher;
 
 const styles = StyleSheet.create({
   container: {

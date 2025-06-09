@@ -7,11 +7,13 @@ import { useThemeCustom } from "@/context/ThemeContext";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import i18n from "i18next";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { SideSheetRef } from "@/components/SideSheet";
 import ThemeSwitcher from "@/components/settings/ThemeSwitcher";
 import LanguageSwitcher from "@/components/settings/LanguageSwitcher";
+import { useAppSelector } from "@/store/hooks";
+import ModelSwitcher from "@/components/settings/ModelSwitcher";
 
 export default function Settings() {
   const { t } = useTranslation();
@@ -19,6 +21,8 @@ export default function Settings() {
   const { theme } = useThemeCustom();
   const themeSwitcherRef = useRef<SideSheetRef>(null);
   const languageSwitcherRef = useRef<SideSheetRef>(null);
+  const modelSwitcherRef = useRef<SideSheetRef>(null);
+  const aiModel = useAppSelector((state) => state.settings.aiModel);
 
   return (
     <SafeAreaView
@@ -63,12 +67,30 @@ export default function Settings() {
           </ThemedView>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          onPress={() => {
+            modelSwitcherRef.current?.open();
+          }}
+        >
+          <ThemedView
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <ThemedText>{t("model.title")}</ThemedText>
+            <ThemedText>{t(`model.${aiModel}`)}</ThemedText>
+          </ThemedView>
+        </TouchableOpacity>
+
         {/*<ThemedView>*/}
         {/*  <ThemedText type="subtitle">{t("languages.title")}</ThemedText>*/}
         {/*</ThemedView>*/}
       </ParallaxScrollView>
       <ThemeSwitcher ref={themeSwitcherRef} />
       <LanguageSwitcher ref={languageSwitcherRef} />
+      <ModelSwitcher ref={modelSwitcherRef} />
     </SafeAreaView>
   );
 }

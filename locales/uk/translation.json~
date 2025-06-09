@@ -15,7 +15,7 @@
   },
   "model": {
     "title": "Модель",
-    "gpt-4o": "GPT-4o (швидка і розумна)",
+    "gpt-4o": "GPT-4o (fast and smart)",
     "gpt-4-turbo": "GPT-4 Turbo"
   }
 }

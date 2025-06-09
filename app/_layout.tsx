@@ -1,4 +1,5 @@
 import "../i18n";
+import "@/constants/CalendarLocale";
 import {
   DarkTheme,
   DefaultTheme,
@@ -16,6 +17,10 @@ import { useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { apiRequest } from "@/utils";
 import uuid from "react-native-uuid";
+import i18n from "i18next";
+import { LocaleConfig } from "react-native-calendars";
+import { store } from "@/store";
+import { Provider } from "react-redux";
 // import * as SecureStore from "expo-secure-store";
 
 export default function RootLayout() {
@@ -25,7 +30,6 @@ export default function RootLayout() {
 
   useEffect(() => {
     const initUuid = async () => {
-      console.log("Initializing UUID and Token...");
       const existingUUID = await SecureStore.getItemAsync("uuid");
       if (!existingUUID) {
         const newUuid = uuid.v4();
@@ -47,16 +51,30 @@ export default function RootLayout() {
     initUuid();
   }, []);
 
+  useEffect(() => {
+    const initLanguage = async () => {
+      const lang = await SecureStore.getItemAsync("lang");
+      if (lang) {
+        i18n.changeLanguage(lang);
+        LocaleConfig.defaultLocale = lang;
+      }
+    };
+
+    initLanguage();
+  }, []);
+
   if (!loaded) {
     return null;
   }
 
   return (
-    <ThemeProviderCustom>
-      <AuthProvider>
-        <RootLayoutInner />
-      </AuthProvider>
-    </ThemeProviderCustom>
+    <Provider store={store}>
+      <ThemeProviderCustom>
+        <AuthProvider>
+          <RootLayoutInner />
+        </AuthProvider>
+      </ThemeProviderCustom>
+    </Provider>
   );
 }
 

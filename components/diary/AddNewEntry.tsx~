@@ -44,12 +44,6 @@ const AddNewEntry = forwardRef<
         },
       });
 
-      if (!res || res.status !== 201) {
-        console.log("No data returned from server");
-        setLoading(false);
-        return;
-      }
-
       const entry = res.data;
       console.log("New entry saved:", res);
 
