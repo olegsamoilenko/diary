@@ -44,7 +44,7 @@ const ThemeSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
               )}
             </View>
             <Text style={[styles.label, { color: Colors[colorScheme].text }]}>
-              {t(`theme.${option.key}`)}
+              {t(`settings.theme.${option.key}`)}
             </Text>
           </TouchableOpacity>
         ))}

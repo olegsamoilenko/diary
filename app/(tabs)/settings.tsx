@@ -33,7 +33,7 @@ export default function Settings() {
       edges={["top"]}
     >
       <ParallaxScrollView>
-        <ThemedText type="title">{t("settings")}</ThemedText>
+        <ThemedText type="title">{t("settings.title")}</ThemedText>
         <TouchableOpacity
           onPress={() => {
             themeSwitcherRef.current?.open();
@@ -46,8 +46,8 @@ export default function Settings() {
               justifyContent: "space-between",
             }}
           >
-            <ThemedText>{t("theme.title")}</ThemedText>
-            <ThemedText>{t(`theme.${theme}`)}</ThemedText>
+            <ThemedText>{t("settings.theme.title")}</ThemedText>
+            <ThemedText>{t(`settings.theme.${theme}`)}</ThemedText>
           </ThemedView>
         </TouchableOpacity>
         <TouchableOpacity
@@ -62,8 +62,8 @@ export default function Settings() {
               justifyContent: "space-between",
             }}
           >
-            <ThemedText>{t("languages.title")}</ThemedText>
-            <ThemedText>{t(`languages.${i18n.language}`)}</ThemedText>
+            <ThemedText>{t("settings.languages.title")}</ThemedText>
+            <ThemedText>{t(`settings.languages.${i18n.language}`)}</ThemedText>
           </ThemedView>
         </TouchableOpacity>
 
@@ -79,8 +79,8 @@ export default function Settings() {
               justifyContent: "space-between",
             }}
           >
-            <ThemedText>{t("model.title")}</ThemedText>
-            <ThemedText>{t(`model.${aiModel}`)}</ThemedText>
+            <ThemedText>{t("settings.model.title")}</ThemedText>
+            <ThemedText>{t(`settings.model.${aiModel}`)}</ThemedText>
           </ThemedView>
         </TouchableOpacity>
 

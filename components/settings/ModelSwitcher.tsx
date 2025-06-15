@@ -46,7 +46,7 @@ const ModelSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
               )}
             </View>
             <Text style={[styles.label, { color: Colors[colorScheme].text }]}>
-              {t(`model.${model.key}`)}
+              {t(`settings.model.${model.key}`)}
             </Text>
           </TouchableOpacity>
         ))}

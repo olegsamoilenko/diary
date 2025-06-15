@@ -26,14 +26,15 @@ export default function MonthView({
   const localeArr = Localization.getLocales();
   const locale = localeArr[0]?.languageTag ?? "en-US";
   const firstDayOfWeek = FIRST_DAY_BY_LOCALE[locale] ?? 1;
-  const lang = i18n.language || "uk";
+  const key = `${i18n.language || "uk"}-${colorScheme}`;
   return (
     <Calendar
-      key={lang}
+      key={key}
       firstDay={firstDayOfWeek}
       theme={{
         calendarBackground: Colors[colorScheme].background,
         arrowColor: Colors[colorScheme].main,
+        monthTextColor: Colors[colorScheme].text,
       }}
       onMonthChange={(obj) => {
         setMonth(obj.month);
@@ -49,7 +50,7 @@ export default function MonthView({
               alignItems: "center",
               backgroundColor:
                 selectedDay === date.dateString
-                  ? "rgba(67, 160, 71, 0.15)"
+                  ? Colors[colorScheme].main
                   : "transparent",
               borderRadius: 100,
               position: "relative",
@@ -59,7 +60,12 @@ export default function MonthView({
           >
             <Text
               style={{
-                color: state === "disabled" ? "gray" : "black",
+                color:
+                  state === "disabled"
+                    ? "gray"
+                    : selectedDay === date.dateString
+                      ? "#ffffff"
+                      : Colors[colorScheme].text,
                 position: "absolute",
                 top: 0,
                 left: 8,

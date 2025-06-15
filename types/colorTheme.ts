@@ -1,7 +1,11 @@
 export type ColorTheme = {
   main: string;
   text: string;
+  secondText: string;
   background: string;
+  secondBackground: string;
+  border: string;
+  error: string;
   tint: string;
   icon: string;
   tabIconDefault: string;
@@ -12,4 +16,12 @@ export type ColorTheme = {
   radioSelectedBorder: string;
   radioSelectedBackground: string;
   radioSelectedDot: string;
+  inputBackground: string;
+  inputBorder: string;
+  diaryNotesBackground: string;
+  aiCommentBackground: string;
+  entryBackground: string;
+  calendarBackground: string;
+  tariff: string;
+  tokens: string;
 };

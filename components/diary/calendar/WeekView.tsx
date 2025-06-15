@@ -123,7 +123,7 @@ export default function WeekView({
             }}
           />
         </Pressable>
-        <Text style={{ fontSize: 16 }}>
+        <Text style={{ fontSize: 16, color: colors.text }}>
           {monthYearStr.slice(0, 1).toUpperCase() + monthYearStr.slice(1, -3)}
         </Text>
         <Pressable
@@ -182,6 +182,8 @@ export default function WeekView({
           const emoji = moodByDate[item];
           const isSelected = selectedDay === item;
           const day = Number(item.split("-")[2]);
+          const itemMonth = Number(item.split("-")[1]);
+          const month = Number(weekDates[0].split("-")[1]);
           return (
             <Pressable
               key={item}
@@ -189,9 +191,7 @@ export default function WeekView({
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: isSelected
-                  ? "rgba(67, 160, 71, 0.15)"
-                  : "transparent",
+                backgroundColor: isSelected ? colors.main : "transparent",
                 borderRadius: 100,
                 width: 40,
                 height: 40,
@@ -200,9 +200,14 @@ export default function WeekView({
             >
               <Text
                 style={{
-                  color: "black",
+                  color:
+                    itemMonth !== month
+                      ? "gray"
+                      : isSelected
+                        ? "#ffffff"
+                        : Colors[colorScheme].text,
                   fontWeight: isSelected ? "bold" : "normal",
-                  fontSize: 16,
+                  fontSize: 14,
                   position: "absolute",
                   top: 0,
                   left: 8,
@@ -244,6 +249,7 @@ export default function WeekView({
             color="#000"
             style={{
               transform: [{ scaleX: 5.6 }, { scaleY: 6.9 }],
+              color: colors.icon,
             }}
           />
         </Text>

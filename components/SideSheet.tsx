@@ -19,6 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedView } from "@/components/ThemedView";
 
 export interface SideSheetRef {
   open: () => void;
@@ -29,10 +30,11 @@ export interface SideSheetRef {
 interface SideSheetProps {
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
+  isKeyboardOpen: boolean;
 }
 
 const SideSheet = forwardRef<SideSheetRef, SideSheetProps>(
-  ({ children, style }, ref) => {
+  ({ children, style, isKeyboardOpen }, ref) => {
     const [visible, setVisible] = useState<boolean>(false);
     const translateX = useRef<Animated.Value>(
       new Animated.Value(Dimensions.get("window").width),
@@ -83,7 +85,7 @@ const SideSheet = forwardRef<SideSheetRef, SideSheetProps>(
         ]}
       >
         <ParallaxScrollView isPadding={false}>
-          <View style={styles.content}>
+          {!isKeyboardOpen && (
             <TouchableOpacity
               onPress={() => {
                 closeSideScreen();
@@ -96,8 +98,9 @@ const SideSheet = forwardRef<SideSheetRef, SideSheetProps>(
                 color={Colors[colorScheme].text}
               />
             </TouchableOpacity>
-            {children}
-          </View>
+          )}
+
+          <ThemedView style={styles.content}>{children}</ThemedView>
         </ParallaxScrollView>
       </Animated.View>
     );
@@ -121,9 +124,13 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   closeBtn: {
-    marginBottom: 16,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 });

@@ -13,7 +13,7 @@ export interface ApiRequestOptions
   method?: Method;
   data?: any;
   params?: Record<string, any>;
-  headers?: Record<string, string>;
+  headers?: Record<string, string | null>;
   config?: AxiosRequestConfig;
 }
 
@@ -25,33 +25,48 @@ export async function apiRequest<T = any>({
   headers = {},
   config = {},
 }: ApiRequestOptions): Promise<AxiosResponse<T>> {
-  let token = await SecureStore.getItemAsync("token");
+  try {
+    let token = await SecureStore.getItemAsync("token");
 
-  if (isTokenExpired(token)) {
-    const uuid = await SecureStore.getItemAsync("uuid");
-    if (uuid) {
-      const res = await axios.post(apiUrl + "/auth/create-token", { uuid });
-      token = res.data.accessToken as string;
-      await SecureStore.setItemAsync("token", token);
+    if (isTokenExpired(token)) {
+      const userRaw = await SecureStore.getItemAsync("user");
+      const user = userRaw ? JSON.parse(userRaw) : {};
+      const uuid = user.uuid;
+      if (uuid) {
+        const res = await axios.post(apiUrl + "/auth/create-token", { uuid });
+        token = res.data.accessToken as string;
+        await SecureStore.setItemAsync("token", token);
+      }
+    }
+
+    const mergedHeaders: Record<string, string> = {
+      ...(headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+
+    if (!mergedHeaders["Content-Type"]) {
+      mergedHeaders["Content-Type"] = "application/json";
+    }
+
+    const requestConfig: AxiosRequestConfig = {
+      url: apiUrl + url,
+      method,
+      data,
+      params,
+      headers: mergedHeaders,
+      ...config,
+    };
+
+    return await axios<T>(requestConfig);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(error);
+      throw error;
+    } else {
+      console.error("Unexpected Error:", error);
+      throw new Error("An unexpected error occurred");
     }
   }
-
-  const mergedHeaders: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...headers,
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-
-  const requestConfig: AxiosRequestConfig = {
-    url: apiUrl + url,
-    method,
-    data,
-    params,
-    headers: mergedHeaders,
-    ...config,
-  };
-
-  return await axios<T>(requestConfig);
 }
 
 function isTokenExpired(token: string | null): boolean {

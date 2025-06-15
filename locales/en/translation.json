@@ -1,21 +1,49 @@
 {
-  "diary": "Diary",
-  "chat": "Chat",
-  "settings": "Settings",
-  "theme": {
-    "system": "System",
-    "light": "Light",
-    "dark": "Dark",
-    "title": "Theme"
+  "diary": {
+    "title": "Diary",
+    "addEntryTitle": "Title",
+    "addEntryContent": "Content...",
+    "addEntryButton": "Save",
+    "noRecords": "There are no records for this day"
   },
-  "languages": {
-    "title": "Language",
-    "en": "English",
-    "uk": "Українська"
+  "chat": {
+    "title": "Chat"
   },
-  "model": {
-    "title": "Model",
-    "gpt-4o": "GPT-4o (fast and smart)",
-    "gpt-4-turbo": "GPT-4 Turbo"
+  "settings": {
+    "title": "Settings",
+    "theme": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "title": "Theme"
+    },
+    "languages": {
+      "title": "Language",
+      "en": "English",
+      "uk": "Українська"
+    },
+    "model": {
+      "title": "Model",
+      "gpt-4o": "GPT-4o (fast and smart)",
+      "gpt-4-turbo": "GPT-4 Turbo"
+    }
+  },
+  "tariffModal": {
+    "title": "Choose your tariff",
+    "month": "month",
+    "free": "Free",
+    "tokensPerMonth": "Tokens/month",
+    "start": {
+      "description": "Trial period 7 days"
+    },
+    "lite": {
+      "description": "For a small amount of notes"
+    },
+    "base": {
+        "description": "Optimal for a diary"
+    },
+    "pro": {
+        "description": "Maximum tariff"
+    }
   }
 }

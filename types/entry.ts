@@ -6,6 +6,7 @@ export type Entry = {
   content: "file" | "directory";
   aiComment: AiComment;
   mood: number;
+  embedding: number[];
   createdAt: Date;
   updatedAt: Date;
 };

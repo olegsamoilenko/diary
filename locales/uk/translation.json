@@ -1,21 +1,49 @@
 {
-  "diary": "Щоденник",
-  "chat": "Чат",
-  "settings": "Налаштування",
-  "theme": {
-    "system": "Системна",
-    "light": "Світла",
-    "dark": "Темна",
-    "title": "Тема"
+  "diary": {
+    "title": "Щоденник",
+    "addEntryTitle": "Заголовок",
+    "addEntryContent": "Текст...",
+    "addEntryButton": "Зберегти",
+    "noRecords": "Немає записів за цей день"
   },
-  "languages": {
-    "title": "Мова",
-    "en": "English",
-    "uk": "Українська"
+  "chat": {
+    "title": "Чат"
   },
-  "model": {
-    "title": "Модель",
-    "gpt-4o": "GPT-4o (швидка і розумна)",
-    "gpt-4-turbo": "GPT-4 Turbo"
+  "settings": {
+    "title": "Налаштування",
+    "theme": {
+      "system": "Системна",
+      "light": "Світла",
+      "dark": "Темна",
+      "title": "Тема"
+    },
+    "languages": {
+      "title": "Мова",
+      "en": "English",
+      "uk": "Українська"
+    },
+    "model": {
+      "title": "Модель",
+      "gpt-4o": "GPT-4o (швидка і розумна)",
+      "gpt-4-turbo": "GPT-4 Turbo"
+    }
+  },
+  "tariffModal": {
+    "title": "Оберіть ваш тариф",
+    "month": "міс",
+    "free": "Безкоштовно",
+    "tokensPerMonth": "Токенів/міс",
+    "start": {
+      "description": "Пробний період 7 днів"
+    },
+    "lite": {
+      "description": "Для невеликого обсягу нотаток"
+    },
+    "base": {
+      "description": "Оптимально для щоденника"
+    },
+    "pro": {
+      "description": "Максимальний тариф"
+    }
   }
 }

@@ -13,7 +13,7 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ThemeProviderCustom } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { apiRequest } from "@/utils";
 import uuid from "react-native-uuid";
@@ -21,6 +21,9 @@ import i18n from "i18next";
 import { LocaleConfig } from "react-native-calendars";
 import { store } from "@/store";
 import { Provider } from "react-redux";
+import SelectPlanModal from "@/components/SelectPlanModal";
+import { Plan, User } from "@/types";
+import Logo from "@/components/Logo";
 // import * as SecureStore from "expo-secure-store";
 
 export default function RootLayout() {
@@ -28,27 +31,38 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
+  const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
-    const initUuid = async () => {
-      const existingUUID = await SecureStore.getItemAsync("uuid");
-      if (!existingUUID) {
+    // const clearUserFromSecureStore = async () => {
+    //   await SecureStore.deleteItemAsync("token");
+    //   await SecureStore.deleteItemAsync("user");
+    //   return;
+    // };
+    // clearUserFromSecureStore();
+
+    const initUser = async () => {
+      let storedUser = await SecureStore.getItemAsync("user");
+      let userObj: User | null = storedUser ? JSON.parse(storedUser) : null;
+      if (!userObj) {
         const newUuid = uuid.v4();
 
         const res = await apiRequest({
           url: `/users/create-by-uuid`,
           method: "POST",
-          data: {
-            uuid: newUuid,
-          },
+          data: { uuid: newUuid },
         });
 
         const data = await res.data;
 
+        userObj = data.user;
         await SecureStore.setItemAsync("token", data.accessToken);
-        await SecureStore.setItemAsync("uuid", data.user.uuid);
+        await SecureStore.setItemAsync("user", JSON.stringify(data.user));
       }
+
+      setUser(userObj);
     };
-    initUuid();
+    initUser();
   }, []);
 
   useEffect(() => {
@@ -63,6 +77,29 @@ export default function RootLayout() {
     initLanguage();
   }, []);
 
+  const subscribePlan = async (plan: Plan) => {
+    try {
+      const { name, price, tokensLimit, ...rest } = plan;
+      const res = await apiRequest({
+        url: `/plans/subscribe`,
+        method: "POST",
+        data: {
+          name,
+          price,
+          tokensLimit,
+        },
+      });
+      const storedUser = await SecureStore.getItemAsync("user");
+      const userObj = JSON.parse(storedUser!);
+
+      userObj.plan = res.data;
+      setUser(userObj);
+      await SecureStore.setItemAsync("user", JSON.stringify(userObj));
+    } catch (error) {
+      console.error("Error setting plan:", error);
+    }
+  };
+
   if (!loaded) {
     return null;
   }
@@ -71,7 +108,13 @@ export default function RootLayout() {
     <Provider store={store}>
       <ThemeProviderCustom>
         <AuthProvider>
-          <RootLayoutInner />
+          {!user?.plan ? (
+            <SelectPlanModal visible onSelect={subscribePlan} />
+          ) : (
+            <>
+              <RootLayoutInner />
+            </>
+          )}
         </AuthProvider>
       </ThemeProviderCustom>
     </Provider>
@@ -83,11 +126,9 @@ function RootLayoutInner() {
   const navTheme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
   const barStyle = colorScheme === "dark" ? "light" : "dark";
 
-  // SecureStore.deleteItemAsync("token");
-  // SecureStore.deleteItemAsync("uuid");
-
   return (
     <ThemeProvider value={navTheme}>
+      {/*<Logo />*/}
       <Stack screenOptions={{ headerShown: false }}></Stack>
       <StatusBar style={barStyle} translucent />
     </ThemeProvider>

@@ -66,7 +66,7 @@ const LanguageSwitcher = forwardRef<SideSheetRef, {}>((props, ref) => {
               )}
             </View>
             <Text style={[styles.label, { color: Colors[colorScheme].text }]}>
-              {t(`languages.${option.key}`)}
+              {t(`settings.languages.${option.key}`)}
             </Text>
           </TouchableOpacity>
         ))}

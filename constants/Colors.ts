@@ -10,8 +10,11 @@ export const Colors = {
   light: {
     main: "#344360",
     text: "#2E3A59",
+    secondText: "#687076",
     background: "#F7F8FA",
-    error: "",
+    secondBackground: "#F7F8FA",
+    border: "#E0E0E0",
+    error: "#B9130F",
     tint: tintColorLight,
     icon: "#687076",
     tabIconDefault: "#687076",
@@ -23,21 +26,29 @@ export const Colors = {
     radioSelectedBorder: "#0284c7",
     radioSelectedBackground: "#eee",
     radioSelectedDot: "#0284c7",
-    // input: "#f2f3f7",
     // input
-    inputBackground: "",
-    inputBorderColor: "",
+    inputBackground: "#ffffff",
+    inputBorder: "#e6e4e4",
     // diary
     diaryNotesBackground: "#EFE7DA",
     aiCommentBackground: "#ECECEC",
+    entryBackground: "#F7F8FA",
     // calendar
-    calendarBackground: "",
+    calendarBackground: "#F7F8FA",
+
+    // plans Modal
+    tariff: "#536c9c",
+    tokens: "#F7F8FA",
   },
+
   dark: {
     main: "#344360",
     text: "#ECEDEE",
+    secondText: "#9BA1A6",
     background: "#151718",
-    error: "",
+    secondBackground: "#222627",
+    border: "#2A2D2F",
+    error: "#B9130F",
     tint: tintColorDark,
     icon: "#9BA1A6",
     tabIconDefault: "#9BA1A6",
@@ -50,13 +61,17 @@ export const Colors = {
     radioSelectedBackground: "#151718",
     radioSelectedDot: "#fff",
     // input
-    input: "#151718",
-    inputBackground: "",
-    inputBorderColor: "",
+    inputBackground: "#000000",
+    inputBorder: "#64676a",
     // diary
-    diaryNotesBackground: "",
+    diaryNotesBackground: "#4b5255",
     aiCommentBackground: "",
+    entryBackground: "#353a3c",
     // calendar
-    calendarBackground: "",
+    calendarBackground: "#151718",
+
+    // plans Modal
+    tariff: "#536c9c",
+    tokens: "#F7F8FA",
   },
 };

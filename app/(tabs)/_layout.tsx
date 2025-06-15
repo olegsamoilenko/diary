@@ -23,7 +23,6 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: "absolute",
           },
           default: {},
@@ -33,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="diary"
         options={{
-          title: t("diary"),
+          title: t("diary.title"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="notebook-outline"
@@ -46,7 +45,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: t("chat"),
+          title: t("chat.title"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="robot-outline"
@@ -59,7 +58,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: t("settings"),
+          title: t("settings.title"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="cog-outline"

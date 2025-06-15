@@ -11,6 +11,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
+import { Theme } from "@/constants/Theme";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useEffect, useRef, useState } from "react";
 import AddButton from "@/components/ui/AddButton";
@@ -24,10 +25,14 @@ import MonthView from "@/components/diary/calendar/MonthView";
 import Animated from "react-native-reanimated";
 import { useAppSelector } from "@/store/hooks";
 import { AILoader } from "@/components/ui/AILoader";
+import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "react-i18next";
 
 export default function Diary() {
+  const { t } = useTranslation();
   const aiModel = useAppSelector((state) => state.settings.aiModel);
   const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme];
   const addNewEntryRef = useRef<SideSheetRef>(null);
   const [selectedDay, setSelectedDay] = useState<
     string | number | Date | undefined
@@ -39,6 +44,9 @@ export default function Diary() {
   const [month, setMonth] = useState<number | null>(new Date().getMonth() + 1);
   const [year, setYear] = useState<number | null>(new Date().getFullYear());
   const [moodByDate, setMoodByDate] = useState<Record<string, string>>({});
+  const [moodByDateBeforeConvert, setMoodByDateBeforeConvert] = useState<
+    { date: string; mood: number; length: number }[]
+  >([]);
   const [showWeek, setShowWeek] = useState(false);
   const [expanded, setExpanded] = useState<{ [key: number]: boolean }>({});
 
@@ -54,11 +62,11 @@ export default function Diary() {
   const [isAiLoading, setIsAiLoading] = useState(false);
 
   function moodsArrayToDict(
-    moods: { date: string; value: number }[],
+    moods: { date: string; mood: number; length: number }[],
   ): Record<string, string> {
     return moods.reduce(
-      (acc, { date, value }) => {
-        acc[date] = emojiByValue[value] ?? "🙂";
+      (acc, { date, mood, length }) => {
+        acc[date] = emojiByValue[Math.round(mood / length)] ?? "🙂";
         return acc;
       },
       {} as Record<string, string>,
@@ -74,6 +82,11 @@ export default function Diary() {
 
   const fetchDiaryEntries = async () => {
     if (justAddedTodayEntry) return;
+
+    const user = await SecureStore.getItemAsync("user");
+
+    if (!user) return;
+
     setLoading(true);
 
     try {
@@ -90,6 +103,9 @@ export default function Diary() {
         ...prev,
         [selectedDay?.toString() || "unknown"]: response.data,
       }));
+
+      setWeekAnchorDay(selectedDay as string);
+      setShowWeek(true);
     } catch (error) {
       console.error("Error fetching diary entries:", error);
     } finally {
@@ -100,9 +116,11 @@ export default function Diary() {
   const generateAiContent = async (
     entryId: number,
     content: string,
+    embedding: number[],
     aiModel: string,
     mood: number,
   ) => {
+    setExpanded({});
     setIsAiLoading(true);
     setExpanded((prev) => ({
       ...prev,
@@ -116,6 +134,7 @@ export default function Diary() {
           entryId,
           data: {
             content,
+            embedding,
             aiModel,
             mood,
           },
@@ -148,11 +167,31 @@ export default function Diary() {
       ...prev,
       [todayStr]: [...(prev[todayStr] ?? []), newEntry],
     }));
+    setMoodByDateBeforeConvert((prev) => {
+      const idx = prev.findIndex((p) => p.date === todayStr);
+
+      if (idx !== -1) {
+        const obj = prev[idx];
+        const newLength = (obj.length ?? 1) + 1;
+        const newMood = obj.mood + newEntry.mood;
+
+        return [
+          ...prev.slice(0, idx),
+          { ...obj, mood: Math.round(newMood), length: newLength },
+          ...prev.slice(idx + 1),
+        ];
+      } else {
+        return [...prev, { date: todayStr, mood: newEntry.mood, length: 1 }];
+      }
+    });
+
     setWeekAnchorDay(todayStr);
     setJustAddedTodayEntry(true);
+    setShowWeek(true);
     await generateAiContent(
       Number(newEntry.id),
       newEntry.content,
+      newEntry.embedding,
       aiModel,
       newEntry.mood,
     );
@@ -175,6 +214,9 @@ export default function Diary() {
 
   useEffect(() => {
     const fetchMoodsByDate = async () => {
+      const user = await SecureStore.getItemAsync("user");
+
+      if (!user) return;
       try {
         const response = await apiRequest({
           url: "/diary-entries/get-moods-by-date",
@@ -185,7 +227,8 @@ export default function Diary() {
             offsetMinutes,
           },
         });
-        setMoodByDate(moodsArrayToDict(response.data));
+
+        setMoodByDateBeforeConvert(response.data);
       } catch (error) {
         console.error("Error fetching moods by date:", error);
       }
@@ -194,11 +237,15 @@ export default function Diary() {
     fetchMoodsByDate();
   }, [month, year, offsetMinutes]);
 
+  useEffect(() => {
+    setMoodByDate(moodsArrayToDict(moodByDateBeforeConvert));
+  }, [moodByDateBeforeConvert]);
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: Colors[colorScheme].statusBarBg,
+        backgroundColor: colors.statusBarBg,
       }}
       edges={["top"]}
     >
@@ -206,7 +253,7 @@ export default function Diary() {
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <ActivityIndicator size="large" color={Colors[colorScheme].main} />
+          <ActivityIndicator size="large" color={colors.main} />
         </View>
       ) : (
         <>
@@ -243,7 +290,7 @@ export default function Diary() {
                   <ThemedView
                     key={entry.id}
                     style={{
-                      backgroundColor: "#fff",
+                      backgroundColor: colors.entryBackground,
                       padding: 8,
                       borderRadius: 8,
                       marginBottom: 8,
@@ -252,50 +299,67 @@ export default function Diary() {
                     <ThemedView
                       style={{
                         flexDirection: "row",
-                        alignItems: "center",
+                        alignItems: "flex-start",
                         justifyContent: "space-between",
-                        backgroundColor: "#fff",
+                        backgroundColor: colors.entryBackground,
                       }}
                     >
-                      {/* Зліва: емоджі + title (можна теж flex, щоб тайтл не стискався сильно) */}
                       <ThemedView
                         style={{
                           flexDirection: "row",
-                          alignItems: "center",
+                          alignItems: "flex-start",
                           flex: 1,
-                          backgroundColor: "#fff",
+                          backgroundColor: colors.entryBackground,
+                          marginBottom: 8,
                         }}
                       >
                         {MoodEmoji.find(
                           (mood) => mood.value === entry.mood,
                         ) && (
-                          <Text style={{ fontSize: 22, marginRight: 8 }}>
-                            {MoodEmoji.find((mood) => mood.value === entry.mood)
-                              ?.label ?? ""}
-                          </Text>
+                          <ThemedView
+                            style={{
+                              justifyContent: "flex-start",
+                              flexDirection: "row",
+                              alignItems: "flex-start",
+                            }}
+                          >
+                            <ThemedText
+                              style={{
+                                fontSize: 22,
+                                marginRight: 8,
+                              }}
+                            >
+                              {MoodEmoji.find(
+                                (mood) => mood.value === entry.mood,
+                              )?.label ?? ""}
+                            </ThemedText>
+                          </ThemedView>
                         )}
 
-                        <ThemedText
-                          type="subtitle"
-                          numberOfLines={1}
-                          style={{ flexShrink: 1 }}
-                        >
-                          {entry.title}
-                        </ThemedText>
+                        <ThemedText type="subtitle">{entry.title}</ThemedText>
                       </ThemedView>
 
-                      <ThemedText
-                        type="default"
+                      <ThemedView
                         style={{
-                          marginLeft: 8,
-                          color: Colors[colorScheme].text,
+                          justifyContent: "flex-start",
+                          flexDirection: "row",
+                          alignItems: "flex-start",
                         }}
                       >
-                        {new Date(entry.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </ThemedText>
+                        <ThemedText
+                          type="default"
+                          style={{
+                            marginLeft: 8,
+                            fontSize: Theme.fontSizes.small,
+                            color: colors.text,
+                          }}
+                        >
+                          {new Date(entry.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </ThemedText>
+                      </ThemedView>
                     </ThemedView>
 
                     <Pressable
@@ -304,10 +368,9 @@ export default function Diary() {
                     >
                       <ThemedView
                         style={{
-                          backgroundColor:
-                            Colors[colorScheme].diaryNotesBackground,
-                          borderRadius: 8,
-                          paddingLeft: 4,
+                          backgroundColor: colors.diaryNotesBackground,
+                          borderRadius: 4,
+                          padding: 8,
                           marginBottom: 8,
                           elevation: 6,
                         }}
@@ -316,16 +379,14 @@ export default function Diary() {
                           numberOfLines={
                             expanded[Number(entry.id)] ? undefined : 3
                           }
-                          style={{ marginTop: 6 }}
                         >
                           {entry.content}
                         </ThemedText>
                       </ThemedView>
-                      {expanded[Number(entry.id)] && (
+                      {expanded[Number(entry.id)] && entry.aiComment && (
                         <ThemedView
                           style={{
-                            backgroundColor:
-                              Colors[colorScheme].aiCommentBackground,
+                            backgroundColor: colors.aiCommentBackground,
                             borderRadius: 18,
                             paddingLeft: 4,
                             width: "80%",
@@ -343,7 +404,7 @@ export default function Diary() {
                       )}
                     </Pressable>
                   </ThemedView>
-                ))) || <ThemedText>Немає записів за цей день</ThemedText>}
+                ))) || <ThemedText>{t("diary.noRecords")}</ThemedText>}
             </ThemedView>
           </ParallaxScrollView>
           <AddButton

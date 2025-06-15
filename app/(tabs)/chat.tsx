@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, Keyboard, Dimensions } from "react-native";
 
 import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
@@ -9,9 +9,53 @@ import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import {
+  actions,
+  RichEditor,
+  RichToolbar,
+} from "react-native-pell-rich-editor";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function Chat() {
   const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme];
+  const [content, setContent] = React.useState<string>("");
+  const handleHead = ({ tintColor }: { tintColor: string }) => (
+    <ThemedText style={{ color: tintColor }}>H1</ThemedText>
+  );
+
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [editorHeight, setEditorHeight] = useState(300); // дефолт
+  const richText = useRef(null);
+
+  useEffect(() => {
+    const onShow = (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    };
+    const onHide = () => {
+      setKeyboardHeight(0);
+    };
+    const showSub = Keyboard.addListener("keyboardDidShow", onShow);
+    const hideSub = Keyboard.addListener("keyboardDidHide", onHide);
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Розрахунок динамічної висоти редактора
+    const screenHeight = Dimensions.get("window").height;
+    // 200 — це приблизна висота тулбара + SafeArea + інше
+    const reservedHeight = 50;
+    const maxHeight = screenHeight - keyboardHeight - reservedHeight;
+    if (keyboardHeight === 0) {
+      setEditorHeight(300);
+    } else {
+      setEditorHeight(maxHeight);
+    }
+  }, [keyboardHeight]);
 
   return (
     <SafeAreaView
@@ -21,103 +65,67 @@ export default function Chat() {
       }}
       edges={["top"]}
     >
-      <ParallaxScrollView>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">Explore</ThemedText>
-        </ThemedView>
-        <ThemedText>
-          This app includes example code to help you get started.
-        </ThemedText>
-        <Collapsible title="File-based routing">
-          <ThemedText>
-            This app has two screens:{" "}
-            <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-            and{" "}
-            <ThemedText type="defaultSemiBold">
-              app/(tabs)/explore.tsx
-            </ThemedText>
-          </ThemedText>
-          <ThemedText>
-            The layout file in{" "}
-            <ThemedText type="defaultSemiBold">
-              app/(tabs)/_layout.tsx
-            </ThemedText>{" "}
-            sets up the tab navigator.
-          </ThemedText>
-          <ExternalLink href="https://docs.expo.dev/router/introduction">
-            <ThemedText type="link">Learn more</ThemedText>
-          </ExternalLink>
-        </Collapsible>
-        <Collapsible title="Android, iOS, and web support">
-          <ThemedText>
-            You can open this project on Android, iOS, and the web. To open the
-            web version, press <ThemedText type="defaultSemiBold">w</ThemedText>{" "}
-            in the terminal running this project.
-          </ThemedText>
-        </Collapsible>
-        <Collapsible title="Images">
-          <ThemedText>
-            For static images, you can use the{" "}
-            <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-            <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to
-            provide files for different screen densities
-          </ThemedText>
-          <Image
-            source={require("@/assets/images/react-logo.png")}
-            style={{ alignSelf: "center" }}
-          />
-          <ExternalLink href="https://reactnative.dev/docs/images">
-            <ThemedText type="link">Learn more</ThemedText>
-          </ExternalLink>
-        </Collapsible>
-        <Collapsible title="Custom fonts">
-          <ThemedText>
-            Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText>{" "}
-            to see how to load{" "}
-            <ThemedText style={{ fontFamily: "SpaceMono" }}>
-              custom fonts such as this one.
-            </ThemedText>
-          </ThemedText>
-          <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-            <ThemedText type="link">Learn more</ThemedText>
-          </ExternalLink>
-        </Collapsible>
-        <Collapsible title="Light and dark mode components">
-          <ThemedText>
-            This template has light and dark mode support. The{" "}
-            <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText>{" "}
-            hook lets you inspect what the user&apos;s current color scheme is,
-            and so you can adjust UI colors accordingly.
-          </ThemedText>
-          <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-            <ThemedText type="link">Learn more</ThemedText>
-          </ExternalLink>
-        </Collapsible>
-        <Collapsible title="Animations">
-          <ThemedText>
-            This template includes an example of an animated component. The{" "}
-            <ThemedText type="defaultSemiBold">
-              components/HelloWave.tsx
-            </ThemedText>{" "}
-            component uses the powerful{" "}
-            <ThemedText type="defaultSemiBold">
-              react-native-reanimated
-            </ThemedText>{" "}
-            library to create a waving hand animation.
-          </ThemedText>
-          {Platform.select({
-            ios: (
-              <ThemedText>
-                The{" "}
-                <ThemedText type="defaultSemiBold">
-                  components/ParallaxScrollView.tsx
-                </ThemedText>{" "}
-                component provides a parallax effect for the header image.
-              </ThemedText>
-            ),
-          })}
-        </Collapsible>
-      </ParallaxScrollView>
+      <ThemedView
+        style={{
+          flex: 1,
+          // width: "90%",
+          // marginHorizontal: "auto",
+        }}
+      >
+        <RichEditor
+          ref={richText}
+          initialContentHTML={content}
+          onChange={setContent}
+          style={{
+            flex: 1,
+            minHeight: editorHeight,
+            maxHeight: editorHeight,
+          }}
+          useContainer
+          initialFocus={false}
+          disabled={false}
+          editorStyle={{
+            contentCSSText: `
+            font-family: sans-serif; 
+            font-size: 14px; 
+            padding: 0 10px; 
+            line-height: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 200px; 
+            position: absolute; 
+            width: 80%;
+            top: 0; right: 0; bottom: 0; left: 0;`,
+          }}
+        />
+        <RichToolbar
+          editor={richText}
+          actions={[
+            actions.setBold,
+            actions.setItalic,
+            actions.insertBulletsList,
+            actions.insertOrderedList,
+            actions.insertLink,
+            actions.insertImage,
+            actions.undo,
+            actions.redo,
+            actions.removeFormat,
+            actions.setUnderline,
+            actions.insertVideo,
+            actions.checkboxList,
+            actions.setStrikethrough,
+          ]}
+          iconMap={{
+            [actions.heading1]: handleHead,
+            //   [actions.setUnderline]: require("@/assets/images/rich/underline.png"),
+            //   [actions.insertVideo]: require("@/assets/images/rich/video.png"),
+            //   [actions.removeFormat]: require("@/assets/images/rich/remove_format.png"),
+            //   [actions.undo]: require("@/assets/images/rich/undo.png"),
+            //   [actions.redo]: require("@/assets/images/rich/redo.png"),
+            //   [actions.checkboxList]: require("@/assets/images/rich/checkbox.png"),
+          }}
+        />
+      </ThemedView>
     </SafeAreaView>
   );
 }

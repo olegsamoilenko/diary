@@ -24,7 +24,7 @@ export default function ParallaxScrollView({
         ref={refToUse}
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom }}
-        contentContainerStyle={{ paddingBottom: bottom }}
+        contentContainerStyle={[{ paddingBottom: bottom, flexGrow: 1 }]}
       >
         <ThemedView style={[styles.content, { padding: isPadding ? 20 : 0 }]}>
           {children}
